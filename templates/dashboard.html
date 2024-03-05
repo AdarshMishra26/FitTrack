@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="header flex items-center justify-between mb-8">
+                <div class="flex items-center">
+                    <div class="logo mr-4">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
+                    </div>
+                    <div class="title text-3xl font-bold text-gray-800">Fit-Track</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <nav class="bg-gray-800 p-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <a href="/" class="text-white text-lg font-bold">Dashboard</a>
+                    <a href="/social" class="text-white text-lg font-bold ml-4">Social</a>
+                    <a href="/visualize_progress" class="text-white text-lg font-bold ml-4">Visualize Progress</a>
+                </div>
+                <div>
+                    {% if 'user' in session %}
+                    <a href="/logout" class="text-white">Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto mt-8 px-4">
+        {% if 'user' in session %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4">Your Progress</h2>
+                <p class="text-gray-600">View your progress over time.</p>
+                <a href="/progress" class="mt-4 block text-blue-500 hover:underline">View Progress</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4">Your Goals</h2>
+                <ul class="list-disc pl-4">
+                    {% for goal in progress.goals %}
+                    <li class="text-gray-700">{{ goal.description }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="/goals" class="mt-4 block text-blue-500 hover:underline">Update Goals</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4">Profile</h2>
+                <p class="text-gray-600">View and edit your profile information.</p>
+                <a href="/profile" class="mt-4 block text-blue-500 hover:underline">Edit Profile</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4">Recommendation</h2>
+                <p class="text-gray-600">Get personalized recommendations for your fitness journey.</p>
+                <a href="/recommendations" class="mt-4 block text-blue-500 hover:underline">View Recommendations</a>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold mb-2">Activity</h3>
+                    <p class="text-gray-600">Log your daily activities here.</p>
+                    <a href="/activity" class="mt-4 block text-blue-500 hover:underline">Log Activity</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold mb-2">Exercise</h3>
+                    <p class="text-gray-600">Keep track of your exercise routine.</p>
+                    <a href="/exercise" class="mt-4 block text-blue-500 hover:underline">Log Exercise</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold mb-2">Nutrition</h3>
+                    <p class="text-gray-600">Record your daily nutrition intake.</p>
+                    <a href="/nutrition" class="mt-4 block text-blue-500 hover:underline">Log Nutrition</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-red-500">You need to log in to access this page.</p>
+        <a href="/login" class="mt-4 block text-blue-500 hover:underline">Login</a>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-300 text-center py-4 mt-8">
+        <p class="text-gray-700">Developed by Adarsh</p>
+    </footer>
+
+</body>
+
+</html>

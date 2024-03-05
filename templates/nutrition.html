@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Log</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center">
+                    <div class="mr-4">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Fit-Track Logo" width="80" height="80">
+                    </div>
+                    <div class="text-3xl font-bold text-gray-800">Fit-Track</div>
+                </div>
+                <a href="/dashboard" class="text-blue-500">Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-center h-full">
+        <div class="bg-white p-8 rounded-lg shadow-md w-80">
+            <h1 class="text-xl font-bold mb-4">Nutrition Log</h1>
+            <form action="/nutrition" method="POST">
+                <div class="mb-4">
+                    <label for="meal_type" class="block mb-1">Meal Type:</label>
+                    <select name="meal_type" id="meal_type" class="block w-full rounded border border-gray-300 px-2 py-1 focus:outline-none focus:border-blue-500">
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="food_item" class="block mb-1">Food Item:</label>
+                    <input type="text" name="food_item" id="food_item" required class="block w-full rounded border border-gray-300 px-2 py-1 focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="calories" class="block mb-1">Calories:</label>
+                    <input type="number" name="calories" id="calories" required class="block w-full rounded border border-gray-300 px-2 py-1 focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="date" class="block mb-1">Date:</label>
+                    <input type="date" name="date" id="date" required class="block w-full rounded border border-gray-300 px-2 py-1 focus:outline-none focus:border-blue-500">
+                </div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Log Nutrition</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-gray-300 text-center py-4 mt-4">
+        <p class="text-gray-700">Developed by Adarsh</p>
+    </footer>
+
+</body>
+</html>

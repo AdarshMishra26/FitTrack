@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center mb-8">
+                <div class="mr-4">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Fit-Track Logo" width="80" height="80">
+                </div>
+                <div class="text-3xl font-bold text-gray-800">Fit-Track</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">Progress Overview</h1>
+
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-2">Activity</h2>
+            <ul class="list-disc pl-4">
+                {% for entry in progress.activity %}
+                    <li>{{ entry.date }} - {{ entry.value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-2">Exercise</h2>
+            <ul class="list-disc pl-4">
+                {% for entry in progress.exercise %}
+                    <li>{{ entry.date }} - {{ entry.exercise_type }}: {{ entry.duration }} minutes</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-2">Nutrition</h2>
+            <ul class="list-disc pl-4">
+                {% for entry in progress.nutrition %}
+                    <li>{{ entry.date }} - {{ entry.meal_type }}: {{ entry.food_item }} ({{ entry.calories }} calories)</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-2">Goals</h2>
+            <ul class="list-disc pl-4">
+                {% for entry in progress.goals %}
+                    <li>{{ entry.goal_type }}: {{ entry.target }} by {{ entry.deadline }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <footer class="bg-gray-300 text-center py-4">
+        <p class="text-gray-700">Developed by Adarsh</p>
+    </footer>
+
+</body>
+</html>

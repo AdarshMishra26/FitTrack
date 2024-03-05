@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="header flex items-center justify-center mb-8">
+                <div class="logo mr-4">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
+                </div>
+                <div class="title text-3xl font-bold text-gray-800">Assign-FS</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">User Profile</h1>
+        <form action="/profile" method="POST" class="max-w-md mx-auto">
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-semibold mb-1">Name:</label>
+                <input type="text" name="name" id="name" value="{{ user.name }}" required class="block w-full rounded border border-gray-300 px-3 py-2">
+            </div>
+            <div class="mb-4">
+                <label for="phone" class="block text-sm font-semibold mb-1">Phone:</label>
+                <input type="tel" name="phone" id="phone" value="{{ user.phone }}" required class="block w-full rounded border border-gray-300 px-3 py-2">
+            </div>
+            <div class="mb-4">
+                <label for="dob" class="block text-sm font-semibold mb-1">Date of Birth:</label>
+                <input type="date" name="dob" id="dob" value="{{ user.dob }}" required class="block w-full rounded border border-gray-300 px-3 py-2">
+            </div>
+            <input type="submit" value="Update Profile" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        </form>
+    </div>
+</body>
+</html>

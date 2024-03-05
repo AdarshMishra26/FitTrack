@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+</head>
+<body>
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="header flex items-center justify-center mb-8">
+                <div class="logo mr-4">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
+                </div>
+                <div class="title text-3xl font-bold text-gray-800">Assign-FS</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Verify Your Phone Number</h1>
+        </header>
+        <section>
+            <p>An OTP (One Time Password) has been sent to your phone number. Please enter the OTP below to verify your phone number.</p>
+            <form action="/verify" method="post">
+                <label for="otp">Enter OTP:</label><br>
+                <input type="text" id="otp" name="otp" required><br><br>
+                <input type="submit" value="Verify">
+            </form>
+        </section>
+    </div>
+</body>
+</html>

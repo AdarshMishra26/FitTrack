@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualize Progress</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="header flex items-center justify-center mb-8">
+                <div class="logo mr-4">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
+                </div>
+                <div class="title text-3xl font-bold text-gray-800">Fit-Track</div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Visualize Progress</h1>
+
+    <div id="activity-chart" style="width: 800px; height: 400px;"></div>
+
+    <script>
+        var activityDates = {{ activity_dates|tojson }};
+        var activityValues = {{ activity_values|tojson }};
+
+        var activityChart = {
+            x: activityDates,
+            y: activityValues,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Activity'
+        };
+
+        var layout = {
+            title: 'Activity Progress Over Time',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'Activity Value' }
+        };
+
+        Plotly.newPlot('activity-chart', [activityChart], layout);
+    </script>
+</body>
+</html>

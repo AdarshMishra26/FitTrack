@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="bg-gray-300 py-8">
+        <div class="container mx-auto px-4">
+            <div class="header flex items-center justify-center mb-8">
+                <div class="logo mr-4">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
+                </div>
+                <div class="title text-3xl font-bold text-gray-800">Fit-Track</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto mt-8 px-4">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold">Welcome to the Social Page</h1>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold">Connect with Others</h2>
+            <p class="text-gray-700">Use this space to connect with other users, share your progress, and support each other in achieving your fitness goals.</p>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold">Recent Posts</h2>
+            <ul class="list-disc list-inside text-gray-700">
+                <li>User 1: Just finished a great workout session!</li>
+                <li>User 2: Trying out a new healthy recipe tonight.</li>
+                <li>User 3: Need some motivation to hit the gym today.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-2">Post your Progress</h2>
+            <form action="/social" method="post">
+                <textarea name="post_content" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Share your progress..."></textarea>
+                <button type="submit" class="mt-2 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">Post</button>
+            </form>
+        </section>
+
+        <section class="text-center mt-4">
+            <a href="/dashboard" class="text-blue-500 hover:underline">Go to Dashboard</a>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-300 text-center py-4 mt-8">
+        <p class="text-gray-700">Developed by Adarsh</p>
+    </footer>
+
+</body>
+
+</html>
