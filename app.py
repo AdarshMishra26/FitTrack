@@ -8,6 +8,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson import ObjectId
+import ssl
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -47,6 +49,40 @@ def send_otp(phone, otp):
 def generate_otp():
     return ''.join(random.choices(string.digits, k=6))
 
+def send_email(receiver_email, otp):
+    # SMTP server configuration
+    smtp_server = 'smtp.google.com'
+    smtp_port = 587  # Port may vary depending on your email provider
+    smtp_username = 'turnoverr859@gmail.com'
+    smtp_password = 'Adarsh123@'
+
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    # Email content
+    sender_email = 'your_email_address'
+    subject = 'OTP for Password Reset'
+    body = f'Your OTP for verification is: {otp}'
+
+    # Create a multipart message and set headers
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+
+    # Add body to email
+    message.attach(MIMEText(body, "plain"))
+
+    try:
+        # Try to login and send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls(context=context)
+            server.login(smtp_username, smtp_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        flash('OTP sent successfully via email.', 'success')
+    except Exception as e:
+        flash(f'Failed to send OTP via email: {str(e)}', 'error')
+
 def calculate_calories(user_data):
     # Harris-Benedict equation to calculate BMR
     if user_data['gender'] == 'male':
@@ -75,12 +111,15 @@ def calculate_calories(user_data):
     return tdee
 
 def generate_recommendations(user_data):
+    today = datetime.date.today()
+    year, month, date = map(int, user_data['dob'].split('-'))
+    age = today.year - year
     recommendations = []
 
     # Age-based recommendations
-    if user_data['age'] < 30:
+    if age < 30:
         recommendations.append("Consider incorporating more high-intensity workouts for better metabolism.")
-    elif user_data['age'] >= 30 and user_data['age'] < 50:
+    elif age >= 30 and user_data['age'] < 50:
         recommendations.append("Focus on maintaining a balanced exercise routine including cardio and strength training.")
     else:
         recommendations.append("Include more flexibility and mobility exercises to maintain joint health.")
@@ -131,49 +170,21 @@ def forgot_password():
             otp = generate_otp()
             users_collection.update_one({'_id': user_data['_id']}, {'$set': {'otp': otp}})
             # Send OTP via Twilio
-            send_otp(user_data['phone'], otp)
+            if send_otp(user_data['phone'], otp):
+                flash('OTP sent successfully via email.', 'success')
+                return redirect(url_for('verify_otp', email=email))
             # Send OTP via email
-            send_email(email, otp)
-            return redirect(url_for('verify_otp', email=email))
+            if send_email(email, otp):
+                flash('OTP sent successfully via email.', 'success')
+                return redirect(url_for('verify_otp', email=email))
+            # If failed to send OTP
+            flash('Failed to send OTP. Please try again later.', 'error')
+            return render_template('forgot.html')
         else:
             flash('Email not found. Please enter a valid email address.', 'error')
             return render_template('forgot.html')
 
     return render_template('forgot.html')
-
-def send_email(receiver_email, otp):
-    # SMTP server configuration
-    smtp_server = 'smtp.google.com'
-    smtp_port = 587  # Port may vary depending on your email provider
-    smtp_username = 'turnoverr859@gmail.com'
-    smtp_password = 'Adarsh123@'
-
-    # Create a secure SSL context
-    context = ssl.create_default_context()
-
-    # Email content
-    sender_email = 'your_email_address'
-    subject = 'OTP for Password Reset'
-    body = f'Your OTP for verification is: {otp}'
-
-    # Create a multipart message and set headers
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    # Add body to email
-    message.attach(MIMEText(body, "plain"))
-
-    try:
-        # Try to login and send email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls(context=context)
-            server.login(smtp_username, smtp_password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
-        flash('OTP sent successfully via email.', 'success')
-    except Exception as e:
-        flash(f'Failed to send OTP via email: {str(e)}', 'error')
 
 
 
@@ -389,6 +400,68 @@ def profile():
             return render_template('profile.html', user=user_data)
     else:
         return redirect('/login')
+
+# Forgot.html
+    
+@app.route('/send_otpp', methods=['POST'])
+def send_otpp():
+    if request.method == 'POST':
+        email = request.form['email']
+        user_data = users_collection.find_one({'email': email})
+        if user_data:
+            otp = generate_otp()
+            users_collection.update_one({'_id': user_data['_id']}, {'$set': {'otp': otp}})
+            # Send OTP via phomne
+            try:
+                twilio_client.messages.create(
+                    to= user_data['phone'],
+                    from_=TWILIO_PHONE_NUMBER,
+                    body=f'Your OTP for verification is: {otp}'
+                )
+                flash('OTP sent successfully.', 'success')
+                return redirect(url_for('verify_otp'), email=email)
+            except Exception as e:
+                flash(f'Failed to send OTP: {str(e)}', 'error')
+            # Send OTP via email
+                '''
+            if send_email(email, otp):
+                return redirect(url_for('verify_otp', email=email))
+            else:
+                return "Failed to send OTP. Please try again later.", 500
+                '''
+        else:
+            return "Email not found. Please enter a valid email address.", 404
+
+@app.route('/verify_otp', methods=['POST'])
+def verify_otp():
+    if request.method == 'POST':
+        otp_entered = request.form['otp']
+        user_data = users_collection.find_one({'otp': otp_entered})
+        if user_data:
+            session['user_id'] = str(user_data['_id'])  # Store user ID in session
+            flash('OTP verified successfully. You can now reset your password.', 'success')
+            return render_template('forgot.html', otp_verified=True)
+        else:
+            flash('Invalid OTP. Please try again.', 'error')
+            return render_template('forgot.html', otp_verified=False)
+    else:
+        return render_template('forgot.html', otp_sent= True)
+
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    if 'user_id' in session:
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        if new_password == confirm_password:
+            # Update password in the database
+            user_id = ObjectId(session['user_id'])
+            users_collection.update_one({'_id': user_id}, {'$set': {'password': new_password}})
+            flash('Password reset successfully.', 'success')
+        else:
+            flash('Passwords do not match. Please try again.', 'error')
+    else:
+        flash('Session expired. Please try again.', 'error')
+    return redirect('/forgot')
 
 if __name__ == '__main__':
     app.run(debug=True)
