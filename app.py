@@ -111,7 +111,9 @@ def calculate_calories(user_data):
     return tdee
 
 def generate_recommendations(user_data):
-    age = datetime.date.today() - user_data['DOB']
+    today = datetime.date.today()
+    year, month, date = map(int, user_data['dob'].split('-'))
+    age = today.year - year
     recommendations = []
 
     # Age-based recommendations
