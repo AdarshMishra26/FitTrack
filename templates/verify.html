@@ -4,34 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify OTP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/static/img11.webp');
+            background-size: cover;
+            backdrop-filter: blur(5px);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+        }
+        .header {
+            padding: 20px;
+        }
+        .logo {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="bg-gray-300 py-8">
-        <div class="container mx-auto px-4">
-            <div class="header flex items-center justify-center mb-8">
-                <div class="logo mr-4">
-                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Assign-FS Logo" width="80" height="80">
-                </div>
-                <div class="title text-3xl font-bold text-gray-800">Assign-FS</div>
+
+<div class="bg-gray-300 py-8">
+    <div class="container mx-auto px-4">
+        <div class="header flex items-center justify-center mb-8">
+            <div class="logo mr-4">
+                <img src="/static/logo.png" alt="Assign-FS Logo" width="80" height="80">
             </div>
+            <div class="title text-3xl font-bold text-gray-800">FitTrack</div>
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <header>
-            <h1>Verify Your Phone Number</h1>
-        </header>
-        <section>
-            <p>An OTP (One Time Password) has been sent to your phone number. Please enter the OTP below to verify your phone number.</p>
-            <form action="/verify" method="post">
-                <label for="otp">Enter OTP:</label><br>
-                <input type="text" id="otp" name="otp" required><br><br>
-                <input type="submit" value="Verify">
-            </form>
-        </section>
-    </div>
-    <footer class="bg-gray-300 text-center py-4 mt-4">
-        <p class="text-gray-700">&copy; 2024 Fit-Track. All rights reserved.</p>
-    </footer>
+<div class="container">
+    <header>
+        <h1 class="text-2xl font-bold mb-4">Verify Your Phone Number</h1>
+    </header>
+    <section>
+        <p>An OTP (One Time Password) has been sent to your mail. Please enter the OTP below to verify your mail.</p>
+        <form action="/verify" method="post" class="mt-4">
+            <label for="otp" class="block mb-2">Enter OTP:</label>
+            <input type="text" id="otp" name="otp" required class="block w-full rounded border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500">
+            <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Verify</button>
+        </form>
+    </section>
+</div>
+
 </body>
 </html>
