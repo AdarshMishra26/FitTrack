@@ -1,0 +1,6 @@
+Flask
+pymongo
+plotly
+twilio
+Flask-Mail
+gunicorn
