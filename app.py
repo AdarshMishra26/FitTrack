@@ -8,7 +8,6 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson import ObjectId
-import ssl
 import datetime
 from flask_mail import *
 
@@ -159,24 +158,16 @@ def forgot_password():
             otp = generate_otp()
             users_collection.update_one({'_id': user_data['_id']}, {'$set': {'otp': otp}})
             # Send OTP via Twilio
-            if send_otp(user_data['phone'], otp):
-                flash('OTP sent successfully via email.', 'success')
-                return redirect(url_for('verify_otp', email=email))
+            #if send_otp(user_data['phone'], otp):
+                #flash('OTP sent successfully via email.', 'success')
+                #return redirect(url_for('verify_otp', email=email))
             # Send OTP via email
-            if send_email(email, otp):
-                flash('OTP sent successfully via email.', 'success')
-                return redirect(url_for('verify_otp', email=email))
-            # If failed to send OTP
-            flash('Failed to send OTP. Please try again later.', 'error')
-            return render_template('forgot.html')
+            send_email(email, otp)
+            return render_template('set_password.html')
         else:
-            flash('Email not found. Please enter a valid email address.', 'error')
-            return render_template('forgot.html')
-
-    return render_template('forgot.html')
-
-
-
+            return "Email not found. Please enter a valid email address.", 404
+    else:
+        return render_template('forgot.html')
 
 @app.route('/dashboard')
 def dashboard():
@@ -395,36 +386,6 @@ def profile():
         return redirect('/login')
 
 # Forgot.html
-    
-@app.route('/send_otpp', methods=['POST'])
-def send_otpp():
-    if request.method == 'POST':
-        email = request.form['email']
-        user_data = users_collection.find_one({'email': email})
-        if user_data:
-            otp = generate_otp()
-            users_collection.update_one({'_id': user_data['_id']}, {'$set': {'otp': otp}})
-            # Send OTP via phomne
-            try:
-                twilio_client.messages.create(
-                    to= user_data['phone'],
-                    from_=TWILIO_PHONE_NUMBER,
-                    body=f'Your OTP for verification is: {otp}'
-                )
-                flash('OTP sent successfully.', 'success')
-                return redirect(url_for('verify_otp'), email=email)
-            except Exception as e:
-                flash(f'Failed to send OTP: {str(e)}', 'error')
-            # Send OTP via email
-                '''
-            if send_email(email, otp):
-                return redirect(url_for('verify_otp', email=email))
-            else:
-                return "Failed to send OTP. Please try again later.", 500
-                '''
-        else:
-            return "Email not found. Please enter a valid email address.", 404
-
 @app.route('/verify_otp', methods=['POST'])
 def verify_otp():
     if request.method == 'POST':
@@ -433,12 +394,12 @@ def verify_otp():
         if user_data:
             session['user_id'] = str(user_data['_id'])  # Store user ID in session
             flash('OTP verified successfully. You can now reset your password.', 'success')
-            return render_template('forgot.html', otp_verified=True)
+            return render_template('set_password.html', otp_verified=True)
         else:
             flash('Invalid OTP. Please try again.', 'error')
-            return render_template('forgot.html', otp_verified=False)
+            return render_template('set_password.html', otp_verified=False)
     else:
-        return render_template('forgot.html', otp_sent= True)
+        return render_template('set_password.html')
 
 @app.route('/reset_password', methods=['POST'])
 def reset_password():
@@ -450,6 +411,7 @@ def reset_password():
             user_id = ObjectId(session['user_id'])
             users_collection.update_one({'_id': user_id}, {'$set': {'password': new_password}})
             flash('Password reset successfully.', 'success')
+            return redirect('/login')
         else:
             flash('Passwords do not match. Please try again.', 'error')
     else:
