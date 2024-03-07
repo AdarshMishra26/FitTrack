@@ -390,16 +390,21 @@ def profile():
 def verify_otp():
     if request.method == 'POST':
         otp_entered = request.form['otp']
+        # Retrieve user data from the database based on the entered OTP
         user_data = users_collection.find_one({'otp': otp_entered})
         if user_data:
-            session['user_id'] = str(user_data['_id'])  # Store user ID in session
-            flash('OTP verified successfully. You can now reset your password.', 'success')
-            return render_template('set_password.html', otp_verified=True)
+            # OTP verification successful
+            session['user'] = str(user_data['_id'])  # Store user ID in session
+            # Clear the OTP from the database or mark it as verified
+            users_collection.update_one({'_id': user_data['_id']}, {'$unset': {'otp': ''}})
+            return jsonify({'success': True}), 200
         else:
-            flash('Invalid OTP. Please try again.', 'error')
-            return render_template('set_password.html', otp_verified=False)
+            # Invalid OTP
+            return jsonify({'success': False}), 400
     else:
-        return render_template('set_password.html')
+        # Invalid request method
+        return jsonify({'success': False, 'message': 'Invalid request method'}), 405
+
 
 @app.route('/reset_password', methods=['POST'])
 def reset_password():
