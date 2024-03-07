@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the Developers</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fadeIn {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .developer-card {
+            background-color: #1a202c;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .developer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .developer-card img {
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            width: 200px; /* Adjust the width as needed */
+            height: auto;
+            margin-right: 20px; /* Adjust the margin as needed */
+        }
+
+        .developer-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .developer-content {
+            flex-grow: 1;
+        }
+
+        .social-icons {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            margin-right: 10px;
+            color: #cbd5e0;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #ffffff;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #cbd5e0;
+            font-size: 14px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4a5568;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background-color: #2d3748;
+        }
+    </style>
+</head>
+
+<body class="bg-black text-white">
+    <div class="container mx-auto p-4">
+        <h1 class="text-4xl text-center mb-8">Meet the Developers</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="developer-card rounded-lg overflow-hidden shadow-lg p-6 fadeIn">
+                <img src="{{ url_for('static', filename='adarsh.jpg') }}" alt="Adarsh Mishra" class="rounded mb-4">
+                <div class="developer-content">
+                    <h2 class="text-2xl font-semibold mb-2">Adarsh Mishra</h2>
+                    <p class="text-lg">Adarsh is a passionate developer with expertise in web development and UI/UX design.</p>
+                    <div class="social-icons">
+                        <a href="https://github.com/adarshmishra26"><i class="fab fa-github"></i>Github</a>
+                        <a href="https://linkedin.com/in/adarshmishra26"><i class="fab fa-linkedin"></i>Linkedin</a>
+                    </div>
+                </div>
+            </div>
+            <div class="developer-card rounded-lg overflow-hidden shadow-lg p-6 fadeIn">
+                <img src="{{ url_for('static', filename='rahul.jpg') }}" alt="Rahul Kumar" class="rounded mb-4">
+                <div class="developer-content">
+                    <h2 class="text-2xl font-semibold mb-2">Rahul Kumar</h2>
+                    <p class="text-lg">Rahul is a skilled programmer specializing in backend development and database management.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-github"></i>Github</a>
+                        <a href="#"><i class="fab fa-linkedin"></i>Linkedin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 All rights reserved.</p>
+        <a href="/" class="btn-home">Go to Home</a>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        // Add animation to elements with the "fadeIn" class
+        document.querySelectorAll('.fadeIn').forEach(item => {
+            item.classList.add('animate-fadeIn');
+        });
+    </script>
+</body>
+
+</html>

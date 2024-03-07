@@ -148,6 +148,8 @@ def generate_recommendations(user_data):
 def home():
     return render_template('home.html')
 
+
+
 # Route to handle forgot password request
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot_password():
@@ -266,6 +268,9 @@ def login():
     else:
         return redirect('/dashboard')
 
+@app.route('/developers')
+def developers():
+    return render_template('developers.html')
 
 @app.route('/logout')
 def logout():
