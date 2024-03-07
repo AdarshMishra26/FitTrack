@@ -17,6 +17,22 @@
             </div>
         </div>
     </div>
+    <nav class="bg-gray-800 p-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <a href="/dashboard" class="text-white text-lg font-bold">Dashboard</a>
+                    <a href="/social" class="text-white text-lg font-bold ml-4">Social</a>
+                    <a href="/visualize_progress" class="text-white text-lg font-bold ml-4">Visualize Progress</a>
+                </div>
+                <div>
+                    {% if 'user' in session %}
+                    <a href="/logout" class="text-white">Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <h1>Visualize Progress</h1>
 
@@ -43,4 +59,7 @@
         Plotly.newPlot('activity-chart', [activityChart], layout);
     </script>
 </body>
+<footer class="bg-gray-300 text-center py-4 mt-4">
+    <p class="text-gray-700">&copy; 2024 Fit-Track. All rights reserved.</p>
+</footer>
 </html>

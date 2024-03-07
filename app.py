@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import *
 from pymongo import MongoClient
 import random
 import string
@@ -10,9 +10,13 @@ from email.mime.multipart import MIMEMultipart
 from bson import ObjectId
 import ssl
 import datetime
+from flask_mail import *
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+with open('config.json') as f:
+    params = json.load(f)['param']
 
 # Connect to MongoDB
 client = MongoClient("mongodb+srv://adarshmishra:1234@messportal.qrkbtya.mongodb.net/")
@@ -50,35 +54,20 @@ def generate_otp():
     return ''.join(random.choices(string.digits, k=6))
 
 def send_email(receiver_email, otp):
-    # SMTP server configuration
-    smtp_server = 'smtp.google.com'
-    smtp_port = 587  # Port may vary depending on your email provider
-    smtp_username = 'turnoverr859@gmail.com'
-    smtp_password = 'Adarsh123@'
-
-    # Create a secure SSL context
-    context = ssl.create_default_context()
-
-    # Email content
-    sender_email = 'your_email_address'
-    subject = 'OTP for Password Reset'
-    body = f'Your OTP for verification is: {otp}'
-
-    # Create a multipart message and set headers
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    # Add body to email
-    message.attach(MIMEText(body, "plain"))
-
     try:
         # Try to login and send email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls(context=context)
-            server.login(smtp_username, smtp_password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
+        server=smtplib.SMTP('smtp.gmail.com',587)
+        #adding TLS security 
+        server.starttls()
+        #get your app password of gmail ----as directed in the video
+        sender_email = params['gmail-user']
+        password= params['gmail-password']
+        server.login(sender_email,password)
+
+        #send
+        server.sendmail(sender_email, receiver_email, otp)
+        server.quit()
+
         flash('OTP sent successfully via email.', 'success')
     except Exception as e:
         flash(f'Failed to send OTP via email: {str(e)}', 'error')
@@ -244,7 +233,8 @@ def signup():
         }
         users_collection.insert_one(user_data)
 
-        send_otp(phone, otp)
+        #send_otp(phone, otp)
+        send_email(email, otp)
 
         flash('Please verify your phone number using the OTP sent to your phone.', 'success')
         return redirect('/verify')
@@ -259,7 +249,7 @@ def verify():
         if user_data:
             session['user'] = str(user_data['_id'])  # Convert ObjectId to string
             flash('Verification successful. Welcome!', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             flash('Invalid OTP. Please try again.', 'error')
             return render_template('verify.html')
@@ -268,19 +258,22 @@ def verify():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user_data = users_collection.find_one({'email': email, 'password': password})
-        if user_data:
-            session['user'] = str(user_data['_id'])  # Convert ObjectId to string
-            flash('Login successful. Welcome back!', 'success')
-            return redirect('/dashboard')  # Redirect to dashboard.html upon successful login
-        else:
-            flash('Invalid email or password. Please try again.', 'error')
-            return render_template('login.html')
+    if 'user' not in session:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
+            user_data = users_collection.find_one({'email': email, 'password': password})
+            if user_data:
+                session['user'] = str(user_data['_id'])  # Convert ObjectId to string
+                flash('Login successful. Welcome back!', 'success')
+                return redirect('/dashboard')  # Redirect to dashboard.html upon successful login
+            else:
+                flash('Invalid email or password. Please try again.', 'error')
+                return render_template('login.html')
 
-    return render_template('login.html')
+        return render_template('login.html')
+    else:
+        return redirect('/dashboard')
 
 
 @app.route('/logout')
@@ -297,7 +290,7 @@ def activity():
             activity_data['user_id'] = ObjectId(session['user'])  # Convert string to ObjectId
             activity_collection.insert_one(activity_data)
             flash('Activity logged successfully.', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             return render_template('activity.html')
     else:
@@ -311,7 +304,7 @@ def exercise():
             exercise_data['user_id'] = ObjectId(session['user'])  # Convert string to ObjectId
             exercise_collection.insert_one(exercise_data)
             flash('Exercise logged successfully.', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             return render_template('exercise.html')
     else:
@@ -325,7 +318,7 @@ def nutrition():
             nutrition_data['user_id'] = ObjectId(session['user'])  # Convert string to ObjectId
             nutrition_collection.insert_one(nutrition_data)
             flash('Nutrition logged successfully.', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             return render_template('nutrition.html')
     else:
@@ -339,7 +332,7 @@ def goals():
             goals_data['user_id'] = ObjectId(session['user'])  # Convert string to ObjectId
             goals_collection.insert_one(goals_data)
             flash('Goals updated successfully.', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             return render_template('goals.html')
     else:
@@ -394,7 +387,7 @@ def profile():
             }
             users_collection.update_one({'_id': user_id}, {'$set': update_data})
             flash('Profile updated successfully.', 'success')
-            return redirect('/')
+            return redirect('/dashboard')
         else:
             user_data = users_collection.find_one({'_id': ObjectId(session['user'])})  # Convert string to ObjectId
             return render_template('profile.html', user=user_data)
