@@ -67,7 +67,7 @@
     <div class="max-w-md mx-auto mt-8 px-4">
         <h1 class="text-3xl font-semibold mb-8">Forgot Password</h1>
         <div class="bg-white p-8 rounded-lg shadow-md">
-            <form action="/send_otpp" method="POST">
+            <form action="/forgot" method="POST">
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Enter your email:</label>
                     <input type="email" id="email" name="email" required
@@ -80,46 +80,7 @@
                 </div>
             </form>
         </div>
-
-        <div class="bg-white p-8 rounded-lg shadow-md mt-8 hidden" id="otpForm">
-            {% if otp_verified %}
-            <form action="/verify_otp" method="POST">
-                <div class="mb-4">
-                    <label for="otp" class="block text-sm font-medium text-gray-700">Enter OTP:</label>
-                    <input type="text" id="otp" name="otp" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                </div>
-                <div class="mt-6">
-                    <button type="submit"
-                        class="w-full btn-custom text-white py-2 px-4 rounded-md hover:bg-custom focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">Verify
-                        OTP</button>
-                </div>
-            </form>
-            {% endif %}
-        </div>
-
-        <div class="bg-white p-8 rounded-lg shadow-md mt-8 hidden" id="resetPasswordForm">
-            {% if otp_verified %}
-            <form action="/reset_password" method="POST">
-                <div class="mb-4">
-                    <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password:</label>
-                    <input type="password" id="newPassword" name="newPassword" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                </div>
-                <div class="mb-4">
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm New
-                        Password:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                </div>
-                <div class="mt-6">
-                    <button type="submit"
-                        class="w-full btn-custom text-white py-2 px-4 rounded-md hover:bg-custom focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">Reset
-                        Password</button>
-                </div>
-            </form>
-            {% endif %}
-        </div>
+        
     </div>
 
     <footer class="footer-bg text-center py-4 mt-4">
