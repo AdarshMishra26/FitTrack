@@ -239,6 +239,7 @@ def verify():
         user_data = users_collection.find_one({'otp': otp_entered})
         if user_data:
             session['user'] = str(user_data['_id'])  # Convert ObjectId to string
+            users_collection.update_one({'_id': user_data['_id']}, {'$unset': {'otp': ''}})
             flash('Verification successful. Welcome!', 'success')
             return redirect('/dashboard')
         else:
